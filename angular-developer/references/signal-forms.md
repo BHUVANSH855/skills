@@ -2,7 +2,9 @@
 
 Signal Forms are the recommended approach for handling forms in modern Angular applications (v21+). They provide a reactive, type-safe, and model-driven way to manage form state using Angular Signals.
 
-**CRITICAL**: You MUST use Angular's new Signal Forms API for all form-related functionality. Do NOT use null as a value or type of any fields.
+**CRITICAL**: You MUST use Angular's new Signal Forms API for all form-related functionality.
+
+Avoid using `null` for required fields. For optional fields (including numeric fields), `null` can be used to represent an empty or unset value.
 
 ## Imports
 
@@ -48,7 +50,7 @@ export class Example {
   userModel = signal({
     name: '', // CRITICAL: NEVER use null or undefined as initial values
     email: '',
-    age: 0, // Use 0 for numbers, NOT null
+    age: 0, // Use 0 for required numeric fields; use null for optional numeric fields
     address: {
       street: '',
       city: '',
@@ -59,7 +61,7 @@ export class Example {
   // WRONG - DO NOT DO THIS:
   // badModel = signal({
   //   name: null,      // ERROR: use '' instead
-  //   age: null,       // ERROR: use 0 instead
+  //   age: null,       // VALID only if the field is optional
   //   items: null      // ERROR: use [] instead
   // });
 
@@ -529,7 +531,7 @@ form(
 | **applyEach args**     | `applyEach(s.items, (item, index) => ...)`    | `applyEach(s.items, (item) => ...)`                         |
 | **Nested @for**        | `$parent.$index`                              | Use `let outerIndex = $index`                               |
 | **FormState import**   | `import { FormState }`                        | `FormState` does not exist, use `FieldState`                |
-| **Null in model**      | `signal({ name: null })`                      | `signal({ name: '' })` or `signal({ age: 0 })`              |
+| **Null in model**      | `signal({ name: null })`                      | Use `''` for required fields, or `null` for optional fields (e.g., `number | null`) |
 | **Validate syntax**    | `validate(s.field, { value } => ...)`         | `validate(s.field, ({ value }) => ...)`                     |
 | **Checkbox Array**     | `[formField]="form.tags"` (string[])          | Checkboxes ONLY bind to `boolean`                           |
 
